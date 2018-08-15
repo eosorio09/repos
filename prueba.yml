@@ -1,0 +1,12 @@
+---
+- name: Crear fichero usando variables
+  hosts: 192.168.1.113
+  vars:
+  - IPADDR: 192.168.1.113
+  - NETMASK: 255.255.255.0
+  - GATEWAY: 192.168.1.253
+  tasks:
+  - name: Crear ficheros de variable
+    template: src=accesos.j2 dest=/home/
+
+
