@@ -1,5 +1,5 @@
 ---
-- hosts: sda
+- hosts: 192.168.1.47
   remote_user: root
   #Continuan las tareas
   tasks:
@@ -10,7 +10,7 @@
      # path: /prueba
      # dest: /root/archivos.tar
 
-- hosts: fedora
+- hosts: 192.168.1.117
   remote_user: root
   tasks:
   - name: Copiando desde SDA a cliente (from serverA to serverB)
