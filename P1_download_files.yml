@@ -1,6 +1,6 @@
 ---
 - name: Conectar con FTP
-  hosts: sda
+  hosts: s192.168.1.47
   remote_user: root
 
   #Definir Variables
