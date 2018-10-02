@@ -4,22 +4,28 @@
   #Continuan las tareas
   tasks:
   #Empaquetando archivos descargados
-  - name: Empaquetando archivos
-    shell: tar -cf /root/archivos.tar /prueba
-    #archive:
-     # path: /prueba
-     # dest: /root/archivos.tar
-
+  - name: Empaquetando archivos  
+    #shell: tar -cf /root/archivos.tar /prueba 
+    archive:
+      path: /prueba
+      dest: /root/archivos.tar
+ 
 - hosts: 192.168.1.117
   remote_user: root
   tasks:
+  - name: verificando existencia de directorio
+    stat:
+        path: /prueba
+    register:  file_ach
+  - name: Crear carpeta para copiar documentos
+    shell: mkdir /prueba/
+    when: file_ach.stat.exists == False
+
   - name: Copiando desde SDA a cliente (from serverA to serverB)
-    synchronize:
-      src: /root/archivos.tar
-      dest: /tmp
-    delegate_to: 192.168.1.47
+    shell: scp root@192.168.1.47:/root/archivos.tar /tmp
+
   #DESempaquetando archivos descargados
-  - name: Desempaquetando archivos descargados
+  - name: Desempaquetando archivos descargados 
     unarchive:
       src: /tmp/archivos.tar
       dest: /prueba
