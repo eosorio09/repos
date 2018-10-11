@@ -1,5 +1,5 @@
 ---
-- hosts: sda
+- hosts: 192.168.1.47
   remote_user: root
   #Continuan las tareas
   
@@ -12,7 +12,7 @@
       dest: /root/archivos.gz
       format: gz
 
-- hosts: sucursales
+- hosts: 192.168.1.110
   remote_user: root
   tasks:
   - name: verificando sha
