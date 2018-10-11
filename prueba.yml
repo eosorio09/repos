@@ -27,12 +27,13 @@
       checksum_algorithm: sha1
     register: num2
 
-#  - name: Validacon Do-Until Loops
-#    shell: scp root@192.168.1.47:/root/archivos.gz /tmp 
-#    register: prueba
-
   - name: depurando
     debug:
-     msg: "el archivo es el mismo"
+     msg: "el archivo es diferente "
     when: num1.stat.checksum != num2.stat.checksum
+  
+  - name: depurando2
+    debug:
+     msg: "el archivo es el mismo"
+    when: num1.stat.checksum == num2.stat.checksum
 ...
