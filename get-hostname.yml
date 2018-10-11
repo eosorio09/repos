@@ -1,9 +1,0 @@
----
-- name: Prueba PlayBook
-  hosts: localhost
-  remote_user: eosorio
-
-  tasks:
-    - name: Get hostname
-      shell: echo $HOSTNAME
-      register: result
