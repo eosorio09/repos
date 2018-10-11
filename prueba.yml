@@ -1,12 +1,38 @@
 ---
-- name: Crear fichero usando variables
-  hosts: 192.168.1.113
-  vars:
-  - IPADDR: 192.168.1.113
-  - NETMASK: 255.255.255.0
-  - GATEWAY: 192.168.1.253
+- hosts: sda
+  remote_user: root
+  #Continuan las tareas
+  
   tasks:
-  - name: Crear ficheros de variable
-    template: src=accesos.j2 dest=/home/
+  #Empaquetando archivos descargados
+  - name: Empaquetando archivos  
+    #shell: tar -cf /root/archivos.tar /prueba 
+    archive:
+      path: /prueba
+      dest: /root/archivos.gz
+      format: gz
 
+- hosts: sucursales
+  remote_user: root
+  tasks:
+  - name: verificando sha
+    stat:
+      path: /root/archivos.gz
+      checksum_algorithm: sha1
+    delegate_to: 192.168.1.47
+    register: num1
+  - name: verificando sha2
+    stat:
+      path: /tmp/archivos.gz
+      checksum_algorithm: sha1
+    register: num2
 
+#  - name: Validacon Do-Until Loops
+#    shell: scp root@192.168.1.47:/root/archivos.gz /tmp 
+#    register: prueba
+
+  - name: depurando
+    debug:
+     msg: "el archivo es el mismo"
+    when: num1.stat.checksum != num2.stat.checksum
+...

@@ -1,16 +1,19 @@
 ---
-- hosts: 192.168.1.47
+- hosts: sda
   remote_user: root
   #Continuan las tareas
+  
   tasks:
   #Empaquetando archivos descargados
   - name: Empaquetando archivos  
     #shell: tar -cf /root/archivos.tar /prueba 
     archive:
       path: /prueba
-      dest: /root/archivos.tar
- 
-- hosts: 192.168.1.117
+      dest: /root/archivos.gz
+      format: gz
+
+#Validar si existe directorio
+- hosts: sucursales
   remote_user: root
   tasks:
   - name: verificando existencia de directorio
@@ -21,15 +24,40 @@
     shell: mkdir /prueba/
     when: file_ach.stat.exists == False
 
+  #Copiar archivos de SDA a cliente
   - name: Copiando desde SDA a cliente (from serverA to serverB)
-    shell: scp root@192.168.1.47:/root/archivos.tar /tmp
+    shell: scp root@192.168.1.47:/root/archivos.gz /tmp
 
-  #DESempaquetando archivos descargados
-  - name: Desempaquetando archivos descargados 
+#    debug:
+#     msg: "se descomprimio el arhivo"
+#    when: num1.stat.checksum == num2.stat.checksum
+
+  - name: verificando sha
+    stat:
+      path: /root/archivos.gz
+      checksum_algorithm: sha1
+    delegate_to: 192.168.1.47
+    register: num1
+  - name: verificando sha2
+    stat:
+      path: /tmp/archivos.gz
+      checksum_algorithm: sha1
+    register: num2
+
+  - name: Validacon Do-Until Loops
+    shell: scp root@192.168.1.47:/root/archivos.gz /tmp 
+    register: prueba
+    until: num1.stat.checksum == num2.stat.checksum
+    retries: 5
+    delay: 10 
+ 
+  #Desempaquetando archivos descargados
+  - name: Desempaquetando archivios descargados 
     unarchive:
-      src: /tmp/archivos.tar
+      src: /tmp/archivos.gz
       dest: /prueba
       remote_src: yes
+#llamar a la playbook 3
 - name: Llamar P3
   include: P3_execute_script.yml
 ...

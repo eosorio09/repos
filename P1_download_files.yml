@@ -1,8 +1,8 @@
 ---
 - name: Conectar con FTP
-  hosts: 192.168.1.47
+  hosts: sda
   remote_user: root
-
+  
   #Definir Variables
   vars:
   - username: prueba
@@ -14,7 +14,7 @@
 #Inician las tareas
   tasks:
   #Conexion a ftp
-  - name: Conectar con FTP
+  - name: Conectar con FTP  
     #get_url:
     shell:  lftp -u {{ username }},{{ password }} -e "mirror {{destino}} {{destino}} --delete --only-newer --verbose" {{ ip }}
     #shell: lftp -u "{{ username }}","{{ password }}" -e "mirror /prueba /prueba --delete --only-newer --verbose" "{{ ip }} "
@@ -23,3 +23,4 @@
      #url: "{{ url }}" 
 - name: Llamar P2
   include: P2_send_files.yml
+...

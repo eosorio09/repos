@@ -1,0 +1,45 @@
+---
+- name: Obtener parametros VM
+  hosts: 192.168.1.31
+  remote_user: root
+  
+  #Inician las tareas
+  tasks:
+  #Habilitar repositorioa
+  - name: Usuarios del sistema
+    shell:  awk '$3 >= 500 {print $1, $5 }' FS=":" /etc/passwd > /tmp/parametros.txt
+  #Grupos en el sistema
+  - name: Grupos en el sistema
+    shell: awk '$3 >= 1000 {print $1 }' FS=":" /etc/group >> /tmp/parametros.txt
+  #Configuracion de seguridad iptables
+  - name: Configuracion de Seguridad iptables
+    shell: iptables -L >> /tmp/parametros.txt
+  #Configuracion de seguridad firewall
+  - name: Configuracion de Seguridad firewall
+    shell: firewall-cmd --list-all >> /tmp/parametros.txt
+  #Version de Kernel
+  - name: Kernel
+    shell: uname -r >> /tmp/parametros.txt
+  #Memoria
+  - name: Memoria
+    shell: free -g >> /tmp/parametros.txt
+  #CPU
+  - name: CPU
+    shell: cat /proc/cpuinfo | grep processor | wc -l >> /tmp/parametros.txt
+  #Almacenamiento
+  - name: Almacenamiento
+    shell: df -h >> /tmp/parametros.txt
+  #Ultimas sesiones al sistema
+  - name: Ultimas seriones al sistema
+    shell: w >> /tmp/parametros.txt
+  #Paquetes instalados
+  - name: Paquetes instalados
+    shell: w >> /tmp/parametros.txt
+  #Actualizaciones de seguridad
+  - name: Actualizaciones RHEL
+    shell: yum update --security >> /tmp/parametros.txt
+#  - name: Actualizaciones SUSE
+#    command: zypper patch-check
+#  - name: Actualizaciones Debian
+#    command: apt update
+...

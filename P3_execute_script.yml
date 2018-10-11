@@ -1,19 +1,21 @@
 ---
-- hosts: 192.168.1.47
+- hosts: sda
   remote_user: root
   #Continuan las tareas
   tasks:
   #ejecutando script en SDA
-  - name: Dando permisos de ejecucion a script en SDA
+  - name: Dando permisos de ejecucion a script en SDA 
     shell: chmod +x /prueba/pruebados/script.sh
   - name: Ejecutando script en SDA
     shell: /prueba/pruebados/script.sh
-
-- hosts: 192.168.1.117
+  #ejecutando script en host 
+- hosts: sucursales
   remote_user: root
   tasks:
   - name: Dando permisos de ejecucion a script en SDA
     shell: chmod +x /prueba/prueba/pruebados/script.sh
   - name: Ejecutando script en Cliente
     shell: /prueba/prueba/pruebados/script.sh
+  - name: Ejecutando script via ansible
+    shell: echo "Hola mundo"
 ...

@@ -1,0 +1,17 @@
+---
+- hosts: sucursales
+  tasks:
+    - stat:
+        path: /root/archivos.gz
+        checksum_algorithm: sha1
+      delegate_to: 192.168.1.47
+      register: archivo_local
+    - stat:
+        path: /tmp/archivos.gz
+        checksum_algorithm: sha1
+      register: archivo_remoto
+      #failed_when: archivo_remoto.stat.checksum == archivo_local.stat.checksum
+    - name: depurando
+      debug: 
+       var=archivo_local.stat.checksum
+       var=archivo_remoto.stat.checksum

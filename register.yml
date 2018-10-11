@@ -1,0 +1,47 @@
+- name: Playbook para la clase de register
+  hosts: localhost
+  tasks:
+   - name: Ejecutar comando uptime
+     command: uptime
+     register: salida_uptime  
+   - name: Visualizar variable
+     debug: 
+      var: salida_uptime.stdout
+
+   #Obtiene la huella digital 1
+   - name: Obteniendo huella digital
+     stat:
+      path: /etc/hosts
+      checksum_algorithm: sha256
+      get_checksum: on
+     register: num1
+   - name: Visualizar variable num1
+     debug: 
+      var: num1.stat.checksum
+   #Obtiene la huella digital 2
+   - name: Obteniendo huella digital
+     stat:
+      path: /etc/hosts
+      checksum_algorithm: sha256
+      get_checksum: on
+     register: num2
+   - name: Visualizar variable num2
+     debug:
+      var: num2.stat.checksum
+
+   - name: Validacion de num1 y num2
+     debug:
+      msg: "esto es cierto y se imprime este mensaje"
+     when: num1.stat.checksum == num2.stat.checksum
+
+   - name: Continua el playbook
+     debug:
+      msg: "la validacion fue falsa y continua sin ejecutar el proceso del bucle "
+
+
+#{% if num1 == num2 %}
+#Esto es correcto
+#{% endif %} 
+   
+
+...
